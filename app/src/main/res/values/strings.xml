@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SMS Popup</string>
+    <string name="title_activity_overlay_dialog">SMS</string>
+</resources>

@@ -1,0 +1,87 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.byteshaft.smspopup.OverlayDialog"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:src="@drawable/contact"
+            android:id="@+id/img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:textColor="#000000"
+                android:text="Name or Number"
+                android:id="@+id/incomingNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:textStyle="bold"
+                />
+
+
+            <TextView
+                android:id="@+id/tv"
+                android:text="Message"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/editTextMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type Your Message"
+        android:inputType="text"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:paddingTop="5dp"
+        >
+        <Button
+            style="@style/Platform.AppCompat.Light.Dialog"
+            android:id="@+id/bCancel"
+            android:text="Cancel"
+            android:layout_weight="0.5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            style="@style/Platform.AppCompat.Light.Dialog"
+            android:id="@+id/bReply"
+            android:text="Reply"
+            android:enabled="false"
+            android:layout_weight="0.5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
