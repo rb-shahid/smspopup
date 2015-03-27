@@ -58,6 +58,8 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
 
 
 
+
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
@@ -78,6 +80,16 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
         } else {
             contactAddress.setText(name);
         }
+
+        incomingMessageLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri smsUri = Uri.parse(String.format("smsto:%s", incomingAddress));
+                Intent intent = new Intent(Intent.ACTION_SENDTO, smsUri);
+                startActivity(intent);
+                OverlayDialog.closeDialog();
+            }
+        });
     }
 
     @Override
@@ -108,7 +120,6 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
         messageInputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -118,12 +129,10 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
                 } else {
                     replyButton.setEnabled(true);
                 }
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
     }
