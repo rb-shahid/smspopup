@@ -49,6 +49,11 @@ public class SmsReceiver extends BroadcastReceiver  {
             intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent1);
         }
+
+        messageText = null;
+        contactName = null;
+        number = null;
+        photo = null;
     }
 }
 

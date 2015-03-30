@@ -59,9 +59,6 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
         replyButton.setOnClickListener(this);
 
 
-
-
-
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
