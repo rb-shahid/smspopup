@@ -135,4 +135,10 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
             }
         });
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }
