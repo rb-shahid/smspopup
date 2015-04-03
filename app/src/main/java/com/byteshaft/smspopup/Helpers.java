@@ -1,5 +1,7 @@
 package com.byteshaft.smspopup;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -8,6 +10,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.provider.Settings;
+
+import java.util.List;
 
 public class Helpers extends ContextWrapper {
 
@@ -44,5 +49,14 @@ public class Helpers extends ContextWrapper {
         }
 
         return contactName;
+    }
+    boolean isDefaulSmsAppFocused() {
+        String defaultApplication = Settings.Secure.getString(getContentResolver(), "sms_default_application");
+        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+        ActivityManager.RunningTaskInfo task = tasks.get(0);
+        ComponentName rootActivity = task.baseActivity;
+        String rootActivityName = rootActivity.getPackageName();
+        return rootActivityName.equals(defaultApplication);
     }
 }

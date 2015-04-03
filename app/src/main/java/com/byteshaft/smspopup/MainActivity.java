@@ -1,5 +1,7 @@
 package com.byteshaft.smspopup;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.CompoundButton;
@@ -11,6 +13,7 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
     private Helpers mHelpers = null;
     private Switch mPopupDialog = null;
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

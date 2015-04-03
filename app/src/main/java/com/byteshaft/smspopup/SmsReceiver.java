@@ -16,7 +16,7 @@ public class SmsReceiver extends BroadcastReceiver  {
     @Override
     public void onReceive(Context context, Intent intent) {
         Helpers helpers = new Helpers(context);
-        if (!helpers.isPopupEnabled()) {
+        if (!helpers.isPopupEnabled() || helpers.isDefaulSmsAppFocused()) {
             return;
         }
 
@@ -37,6 +37,7 @@ public class SmsReceiver extends BroadcastReceiver  {
             intent1.putExtra("name", contactName);
             intent1.putExtra("number", number);
             intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            System.out.println("starting activity 1");
             context.startActivity(intent1);
         } else if(!OverlayDialog.isActivityRunning()) {
             Intent intent1 = new Intent(context, OverlayDialog.class);
@@ -47,8 +48,15 @@ public class SmsReceiver extends BroadcastReceiver  {
             intent1.putExtra("name", contactName);
             intent1.putExtra("number", number);
             intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            System.out.println("starting activity 2");
             context.startActivity(intent1);
         }
+// resetting values
+        messageText = null;
+        contactName = null;
+        number = null;
+        photo = null;
     }
 }
 
