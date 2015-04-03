@@ -7,17 +7,20 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class OverlayDialog extends Activity implements Button.OnClickListener {
+public class OverlayDialog extends Activity implements View.OnClickListener {
 
-    static OverlayDialog self = null;
+    public static OverlayDialog self = null;
     Uri photoUri = null;
     String incomingAddress;
     private static EditText messageInputField = null;
@@ -45,8 +48,10 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("starting activity");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_overlay_dialog);
+        System.out.println("activity started");
         self = this;
         ImageView contactImage = (ImageView) findViewById(R.id.img);
         TextView incomingMessageLabel = (TextView) findViewById(R.id.tv);
@@ -57,6 +62,7 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
         replyButton = (Button) findViewById(R.id.bReply);
         cancelButton.setOnClickListener(this);
         replyButton.setOnClickListener(this);
+        incomingMessageLabel.setOnClickListener(this);
 
 
         Intent intent = getIntent();
@@ -79,16 +85,17 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
         } else {
             contactAddress.setText(name);
         }
+    }
 
-        incomingMessageLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri smsUri = Uri.parse(String.format("smsto:%s", incomingAddress));
-                Intent intent = new Intent(Intent.ACTION_SENDTO, smsUri);
-                startActivity(intent);
-                OverlayDialog.closeDialog();
-            }
-        });
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics());
+        View view = getWindow().getDecorView();
+        WindowManager.LayoutParams params = (WindowManager.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        params.y = Math.round(pixels);
+        getWindowManager().updateViewLayout(view, params);
     }
 
     @Override
@@ -107,6 +114,13 @@ public class OverlayDialog extends Activity implements Button.OnClickListener {
                 String replyText = messageInputField.getText().toString();
                 sendSms(incomingAddress, replyText );
                 finish();
+                break;
+            case R.id.tv:
+                Uri smsUri = Uri.parse(String.format("smsto:%s", incomingAddress));
+                Intent intent = new Intent(Intent.ACTION_SENDTO, smsUri);
+                startActivity(intent);
+                OverlayDialog.closeDialog();
+                break;
         }
     }
 
