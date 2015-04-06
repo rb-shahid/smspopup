@@ -6,23 +6,25 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity implements Switch.OnCheckedChangeListener, Button.OnClickListener{
+public class MainActivity extends Activity implements CheckBox.OnCheckedChangeListener,
+        View.OnClickListener {
 
     private Helpers mHelpers = null;
-    private Switch mPopupDialog = null;
+    private CheckBox mPopupDialogCheckbox = null;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        mPopupDialog = (Switch) findViewById(R.id.switch1);
-        mPopupDialog.setOnCheckedChangeListener(this);
+        mPopupDialogCheckbox = (CheckBox) findViewById(R.id.switch1);
+        mPopupDialogCheckbox.setOnCheckedChangeListener(this);
         Button close = (Button) findViewById(R.id.bClose);
         close.setOnClickListener(this);
         mHelpers = new Helpers(this);
@@ -32,9 +34,9 @@ public class MainActivity extends Activity implements Switch.OnCheckedChangeList
     protected void onResume() {
         super.onResume();
         if (mHelpers.isPopupEnabled()) {
-            mPopupDialog.setChecked(true);
+            mPopupDialogCheckbox.setChecked(true);
         } else {
-            mPopupDialog.setChecked(false);
+            mPopupDialogCheckbox.setChecked(false);
         }
     }
 
@@ -55,8 +57,7 @@ public class MainActivity extends Activity implements Switch.OnCheckedChangeList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bClose:
-            finish();
-                Toast.makeText(this,"Setting saved ",Toast.LENGTH_SHORT).show();
+                finish();
             break;
 
         }

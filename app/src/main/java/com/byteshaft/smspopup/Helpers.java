@@ -52,11 +52,15 @@ public class Helpers extends ContextWrapper {
     }
     boolean isDefaulSmsAppFocused() {
         String defaultApplication = Settings.Secure.getString(getContentResolver(), "sms_default_application");
+        if (defaultApplication == null) {
+            defaultApplication = "com.android.mms";
+        }
         ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
         ActivityManager.RunningTaskInfo task = tasks.get(0);
         ComponentName rootActivity = task.baseActivity;
         String rootActivityName = rootActivity.getPackageName();
+
         return rootActivityName.equals(defaultApplication);
     }
 }
