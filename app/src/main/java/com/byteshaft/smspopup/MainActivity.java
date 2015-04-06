@@ -1,14 +1,17 @@
 package com.byteshaft.smspopup;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity implements Switch.OnCheckedChangeListener{
+public class MainActivity extends Activity implements Switch.OnCheckedChangeListener, Button.OnClickListener{
 
     private Helpers mHelpers = null;
     private Switch mPopupDialog = null;
@@ -20,6 +23,8 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
         setContentView(R.layout.main_activity);
         mPopupDialog = (Switch) findViewById(R.id.switch1);
         mPopupDialog.setOnCheckedChangeListener(this);
+        Button close = (Button) findViewById(R.id.bClose);
+        close.setOnClickListener(this);
         mHelpers = new Helpers(this);
     }
 
@@ -44,5 +49,17 @@ public class MainActivity extends ActionBarActivity implements Switch.OnCheckedC
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bClose:
+            finish();
+                Toast.makeText(this,"Setting saved ",Toast.LENGTH_SHORT).show();
+            break;
+
+        }
+
     }
 }
