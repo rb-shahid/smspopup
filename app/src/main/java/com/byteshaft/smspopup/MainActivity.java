@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity implements CheckBox.OnCheckedChangeListener,
@@ -28,6 +26,7 @@ public class MainActivity extends Activity implements CheckBox.OnCheckedChangeLi
         Button close = (Button) findViewById(R.id.bClose);
         close.setOnClickListener(this);
         mHelpers = new Helpers(this);
+        setFinishOnTouchOutside(false);
     }
 
     @Override
