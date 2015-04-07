@@ -8,9 +8,11 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.telephony.SmsManager;
 
 import java.util.List;
 
@@ -18,6 +20,11 @@ public class Helpers extends ContextWrapper {
 
     public Helpers(Context base) {
         super(base);
+    }
+
+    void sendSms(String number, String message) {
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(number, null, message, null, null);
     }
 
     void setPopupEnabled(boolean enable) {
@@ -32,7 +39,8 @@ public class Helpers extends ContextWrapper {
 
     String getContactNameFromNumber(String phoneNumber) {
         ContentResolver cr = getContentResolver();
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+        Uri uri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
         Cursor cursor = cr.query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
                 ContactsContract.PhoneLookup.PHOTO_URI}, null, null, null);
         if (cursor == null) {
@@ -40,8 +48,10 @@ public class Helpers extends ContextWrapper {
         }
         String contactName = null;
         if (cursor.moveToFirst()) {
-            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-            SmsReceiver.photo = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.PHOTO_URI));
+            contactName = cursor.getString(
+                    cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+            SmsReceiver.photo = cursor.getString(
+                    cursor.getColumnIndex(ContactsContract.PhoneLookup.PHOTO_URI));
         }
 
         if (!cursor.isClosed()) {
@@ -50,8 +60,9 @@ public class Helpers extends ContextWrapper {
 
         return contactName;
     }
-    boolean isDefaulSmsAppFocused() {
-        String defaultApplication = Settings.Secure.getString(getContentResolver(), "sms_default_application");
+    boolean isDefaultSmsAppFocused() {
+        String defaultApplication = Settings.Secure.getString(
+                getContentResolver(), "sms_default_application");
         if (defaultApplication == null) {
             defaultApplication = "com.android.mms";
         }
@@ -60,7 +71,22 @@ public class Helpers extends ContextWrapper {
         ActivityManager.RunningTaskInfo task = tasks.get(0);
         ComponentName rootActivity = task.baseActivity;
         String rootActivityName = rootActivity.getPackageName();
-
         return rootActivityName.equals(defaultApplication);
+    }
+
+    String getMessageBodyFromBundledExtras(Bundle extras) {
+        return extras.getString("message");
+    }
+
+    String getContactNameFromBundledExtras(Bundle extras) {
+        return extras.getString("name");
+    }
+
+    String getContactAvatarFromBundledExtras(Bundle extras) {
+        return extras.getString("photo");
+    }
+
+    String getContactNumberFromBundledExtras(Bundle extras) {
+        return extras.getString("number");
     }
 }

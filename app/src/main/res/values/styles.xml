@@ -4,6 +4,7 @@
     <style name="DialogTheme" parent="@android:style/Theme.DeviceDefault.Light.Dialog">
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="DialogAnimation" parent="@android:style/Animation.Dialog">

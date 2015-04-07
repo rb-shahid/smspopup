@@ -4,28 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 
 public class OverlayDialog extends Activity implements View.OnClickListener {
 
     public static OverlayDialog self = null;
-    Uri photoUri = null;
-    String incomingAddress;
+    private Uri photoUri = null;
+    private String incomingAddress = null;
     private static EditText messageInputField = null;
-    Button cancelButton;
-    Button replyButton;
+    private Helpers mHelpers = null;
 
     static void closeDialog() {
         if (isActivityRunning()) {
@@ -48,43 +41,35 @@ public class OverlayDialog extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("starting activity");
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_overlay_dialog);
-        System.out.println("activity started");
         self = this;
-        ImageView contactImage = (ImageView) findViewById(R.id.img);
-        TextView incomingMessageLabel = (TextView) findViewById(R.id.tv);
-        TextView contactAddress = (TextView) findViewById(R.id.incomingNumber);
+        UiHelpers uiHelpers = new UiHelpers(this);
         messageInputField = (EditText) findViewById(R.id.editTextMsg);
-        setMessageBoxListener();
-        cancelButton = (Button) findViewById(R.id.bCancel);
-        replyButton = (Button) findViewById(R.id.bReply);
+        Button cancelButton = (Button) findViewById(R.id.bCancel);
+        Button replyButton = (Button) findViewById(R.id.bReply);
         cancelButton.setOnClickListener(this);
         replyButton.setOnClickListener(this);
-        incomingMessageLabel.setOnClickListener(this);
-
-
+        uiHelpers.setMessageBoxTextChangeListener(messageInputField, replyButton);
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+        mHelpers = new Helpers(this);
 
-        String message = extras.getString("message");
-        String name = extras.getString("name");
-        String photo = extras.getString("photo");
-        incomingAddress = extras.getString("number");
+        String message = mHelpers.getMessageBodyFromBundledExtras(extras);
+        String name = mHelpers.getContactNameFromBundledExtras(extras);
+        String photo = mHelpers.getContactAvatarFromBundledExtras(extras);
+        incomingAddress = mHelpers.getContactNumberFromBundledExtras(extras);
 
         if (photo != null) {
             photoUri = Uri.parse(photo);
         }
-
-        contactImage.setImageURI(photoUri);
-        incomingMessageLabel.setText(message);
-
         if (name == null) {
-            contactAddress.setText(incomingAddress);
+            uiHelpers.setContactDisplay(incomingAddress);
         } else {
-            contactAddress.setText(name);
+            uiHelpers.setContactDisplay(name);
         }
+
+        uiHelpers.setUpMessageBodyView(message);
+        uiHelpers.setContactAvatar(photoUri);
     }
 
     @Override
@@ -105,6 +90,12 @@ public class OverlayDialog extends Activity implements View.OnClickListener {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_down_dialog, R.anim.slide_out_down);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bCancel:
@@ -112,7 +103,7 @@ public class OverlayDialog extends Activity implements View.OnClickListener {
                 break;
             case R.id.bReply:
                 String replyText = messageInputField.getText().toString();
-                sendSms(incomingAddress, replyText );
+                mHelpers.sendSms(incomingAddress, replyText);
                 finish();
                 break;
             case R.id.tv:
@@ -122,32 +113,6 @@ public class OverlayDialog extends Activity implements View.OnClickListener {
                 OverlayDialog.closeDialog();
                 break;
         }
-    }
-
-    private void sendSms(String number, String message) {
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(number, null, message, null, null);
-    }
-
-    private void setMessageBoxListener() {
-        messageInputField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (messageInputField.getText().toString().isEmpty()) {
-                    replyButton.setEnabled(false);
-                } else {
-                    replyButton.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
     }
 
     @Override

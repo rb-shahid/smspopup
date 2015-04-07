@@ -1,8 +1,6 @@
 package com.byteshaft.smspopup;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +14,6 @@ public class MainActivity extends Activity implements CheckBox.OnCheckedChangeLi
     private Helpers mHelpers = null;
     private CheckBox mPopupDialogCheckbox = null;
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,22 +29,14 @@ public class MainActivity extends Activity implements CheckBox.OnCheckedChangeLi
     @Override
     protected void onResume() {
         super.onResume();
-        if (mHelpers.isPopupEnabled()) {
-            mPopupDialogCheckbox.setChecked(true);
-        } else {
-            mPopupDialogCheckbox.setChecked(false);
-        }
+        mPopupDialogCheckbox.setChecked(mHelpers.isPopupEnabled());
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.switch1:
-                if (isChecked) {
-                    mHelpers.setPopupEnabled(true);
-                } else {
-                    mHelpers.setPopupEnabled(false);
-                }
+                mHelpers.setPopupEnabled(isChecked);
                 break;
         }
     }
@@ -58,8 +47,6 @@ public class MainActivity extends Activity implements CheckBox.OnCheckedChangeLi
             case R.id.bClose:
                 finish();
             break;
-
         }
-
     }
 }
